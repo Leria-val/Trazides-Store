@@ -1,8 +1,7 @@
-// src/pages/Register.jsx
+// src/pages/Cadastro.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/** Estilos básicos */
 const styles = {
   page: {
     background: "#fff",
@@ -63,13 +62,20 @@ const styles = {
     transition: "background 0.2s"
   },
   switch: {
-    color: "#111",
-    fontWeight: 700,
+    background: "#111",
+    color: "#fff",
+    borderRadius: 8,
+    padding: "8px 24px",
+    border: "2px solid #111",
+    fontWeight: 600,
+    fontSize: 18,
+    textDecoration: "none",
+    transition: "background 0.2s",
     cursor: "pointer",
-    fontSize: 16,
-    marginTop: 13,
-    marginBottom: 3,
-    display: "inline-block"
+    margin: "16px auto 0",
+    textAlign: "center",
+    display: "block",
+    width: "fit-content"
   },
   error: {
     color: "#e14c4c",
@@ -88,7 +94,6 @@ const styles = {
   }
 };
 
-// Para animação fade/slide
 const keyframes = `
 @keyframes fadeIn {
   0% { opacity: 0; transform: translateX(18px);}
@@ -99,10 +104,7 @@ const keyframes = `
 const validateEmail = (email) =>
   /^.+@.+\..+$/.test(email);
 
-/**
- * Página de Cadastro/Login
- */
-export default function Register() {
+export default function Cadastro() {
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [fields, setFields] = useState({
     name: "",
@@ -113,8 +115,6 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  // Para animação: re-renderiza ao alternar modo
   const [formKey, setFormKey] = useState(0);
 
   const handleInput = (e) => {
@@ -131,7 +131,6 @@ export default function Register() {
     setFormKey(Math.random());
   };
 
-  // Simulação submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -183,7 +182,6 @@ export default function Register() {
 
   return (
     <div style={styles.page}>
-      {/* Keyframes para animação */}
       <style>{keyframes}</style>
       <div style={styles.header}>Trazides Store</div>
       <form
@@ -263,11 +261,18 @@ export default function Register() {
             ? "Entrar"
             : "Criar Conta"}
         </button>
-        <span style={styles.switch} onClick={switchMode}>
+        {/* Botão de alternância de modo */}
+        <button
+          type="button"
+          style={styles.switch}
+          onClick={switchMode}
+          onMouseOver={e => (e.target.style.background = "#333")}
+          onMouseOut={e => (e.target.style.background = "#111")}
+        >
           {mode === "login"
-            ? "Ainda não tem conta? Cadastrar"
+            ? "Ainda não tem conta? Cadastre-se"
             : "Já tem conta? Entrar"}
-        </span>
+        </button>
       </form>
     </div>
   );
