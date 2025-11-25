@@ -1,4 +1,3 @@
-
 import './App.css';
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
@@ -8,6 +7,7 @@ import Products from './components/Products';
 import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
 import Cart from "./pages/Cart"; 
+import Cadastro from './pages/Cadastro'; // <-- ADICIONE ESTA LINHA
 import { CartProvider } from './context/CartContext';
 
 function App() {
@@ -20,7 +20,6 @@ function App() {
 
         <NavBar setToken={setToken} />
 <Routes>
-
 
   <Route 
     path="/login" 
@@ -35,7 +34,6 @@ function App() {
         : <Login token={token} setToken={setToken} />
     } 
   />
-
 
   <Route 
     path="/products/:id" 
@@ -52,6 +50,18 @@ function App() {
            ? <Cart />
           : <Login token={token} setToken={setToken} />
       }/>
+
+  <Route 
+    path="/cadastro"
+    element={<Cadastro />} 
+  />
+
+  {/* Opcional: caminho alternativo */}
+  <Route 
+    path="/register"
+    element={<Cadastro />} 
+  />
+
 </Routes>
         <Footer />
 
@@ -61,8 +71,6 @@ function App() {
 }
 
 export default App;
-
-
 
 
 
