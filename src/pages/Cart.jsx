@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const {
@@ -11,6 +12,14 @@ const Cart = () => {
     totalItems,
     totalPrice,
   } = useContext(CartContext);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    clearCart();
+    navigate("/cadastro")
+
+  }
 
   if (cart.length === 0) {
     return <h2 style={{ textAlign: "center" }}>Tu carrito está vacío 😢</h2>;
@@ -41,7 +50,7 @@ const Cart = () => {
 
       <h3>Total: ${totalPrice}</h3>
 
-      <button className="clear-btn" onClick={clearCart}>
+      <button className="clear-btn" onClick={handleSubmit}>
         Vaciar Carrito
       </button>
     </div>
