@@ -1,4 +1,3 @@
-
 *{
 box-sizing: border-box;
 padding: 0;
@@ -23,12 +22,14 @@ min-height: 80vh;
 display: grid;
 grid-template-columns: repeat(4, 1fr);
 justify-items: center;
-padding: 10px; 
+gap: 20px;
+padding: 20px; 
 }
 
 img {
 width: 250px;
 height: 250px;
+object-fit: contain;
 transition: all 0.3s ease;
 }
 
@@ -48,6 +49,7 @@ margin: 20px 0;
 display: flex;
 align-items: flex-start;
 flex-direction: column;
+width: 100%;
 }
 
 
@@ -104,7 +106,7 @@ button {
   padding: 10px;
   width: 100px;
   border: 1px solid #cecece;
-  margin: 50px;
+  margin: 50px; /*tirar segundo gpt*/
   background-color: black;
   color: whitesmoke ;
 }
@@ -139,4 +141,50 @@ button {
   color: white;
   padding: 8px;
   border-radius: 5px;
+}
+
+
+
+/* 📱 Para tablets (máximo 900px): 2 columnas */
+@media (max-width: 900px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  img {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+/* 📱 Para celulares grandes (máximo 600px): 1 columna */
+@media (max-width: 600px) {
+  .products-container {
+    grid-template-columns: 1fr;
+  }
+
+  img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .card {
+    width: 90%;
+  }
+}
+
+/* 📱 Navbar responsivo */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+    padding: 15px 0;
+    text-align: center;
+  }
+
+  .log-out-btn {
+    width: 80%;
+    margin: 10px 0;
+  }
 }
