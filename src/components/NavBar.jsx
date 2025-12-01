@@ -3,7 +3,7 @@ import '../App.css'
 import { CartContext } from '../context/CartContext';
 import { useNavigate } from "react-router-dom";
 
-const NavBar = ({setToken}) => {
+const NavBar = ({ token, setToken }) => {
     const navigate = useNavigate();
     const { totalItems } = useContext(CartContext);
 
@@ -16,19 +16,31 @@ const NavBar = ({setToken}) => {
             <h1>Trazides Store</h1>
 
 
-      <div className="cart-info"
+            <div className="cart-info"
       onClick={() => navigate("/cart")}
       style={{ cursor: "pointer" }}
       >
         🛒 {totalItems}
       </div>
 
-
-            <button 
-            className='log-out-btn' 
-            onClick= {() => logOutHandler()}> 
-            Log Out 
+            {/* Dashboard link: always visible. If no token, redirect user to /login */}
+            <button
+                className="dashboard-btn"
+                onClick={() => navigate(token ? '/dashboard' : '/login')}
+            >
+                Dashboard
             </button>
+
+            {/* Login / Logout */}
+            {token ? (
+                <button 
+                    className='log-out-btn' 
+                    onClick= {() => logOutHandler()}> 
+                    Log Out 
+                </button>
+            ) : (
+                <button className='login-btn' onClick={() => navigate('/login')}>Login</button>
+            )}
             </div>
     )
 }

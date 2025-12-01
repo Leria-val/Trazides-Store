@@ -10,6 +10,7 @@ import Cart from "./pages/Cart";
 import Cadastro from './pages/Cadastro';
 import { CartProvider } from './context/CartContext';
 import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const [token, setToken] =
@@ -19,7 +20,7 @@ function App() {
     <CartProvider>
       <div className="App">
 
-        <NavBar setToken={setToken} />
+        <NavBar token={token} setToken={setToken} />
 
         <Routes>
 
@@ -28,10 +29,14 @@ function App() {
             element={<Login token={token} setToken={setToken} />} 
           />
 
-          {/* Dashboard — rota normal */}
-          <Route 
-            path="/dashboard" 
-            element={<Dashboard />} 
+          {/* Dashboard — rota protegida (somente com login válido) */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute token={token}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
           />
 
           <Route 
