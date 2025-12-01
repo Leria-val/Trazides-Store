@@ -7,8 +7,9 @@ import Products from './components/Products';
 import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
 import Cart from "./pages/Cart"; 
-import Cadastro from './pages/Cadastro'; // <-- ADICIONE ESTA LINHA
+import Cadastro from './pages/Cadastro';
 import { CartProvider } from './context/CartContext';
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [token, setToken] =
@@ -19,50 +20,59 @@ function App() {
       <div className="App">
 
         <NavBar setToken={setToken} />
-<Routes>
 
-  <Route 
-    path="/login" 
-    element={<Login token={token} setToken={setToken} />} 
-  />
+        <Routes>
 
-  <Route 
-    path="/" 
-    element={
-      token 
-        ? <Products /> 
-        : <Login token={token} setToken={setToken} />
-    } 
-  />
+          <Route 
+            path="/login" 
+            element={<Login token={token} setToken={setToken} />} 
+          />
 
-  <Route 
-    path="/products/:id" 
-    element={
-      token 
-        ? <ProductDetails /> 
-        : <Login token={token} setToken={setToken} />
-    } 
-  />
+          {/* Dashboard — rota normal */}
+          <Route 
+            path="/dashboard" 
+            element={<Dashboard />} 
+          />
 
-  <Route path="/cart" 
-      element={
-           token 
-           ? <Cart />
-          : <Login token={token} setToken={setToken} />
-      }/>
+          <Route 
+            path="/" 
+            element={
+              token 
+                ? <Products /> 
+                : <Login token={token} setToken={setToken} />
+            } 
+          />
 
-  <Route 
-    path="/cadastro"
-    element={<Cadastro />} 
-  />
+          <Route 
+            path="/products/:id" 
+            element={
+              token 
+                ? <ProductDetails /> 
+                : <Login token={token} setToken={setToken} />
+            } 
+          />
 
-  {/* Opcional: caminho alternativo */}
-  <Route 
-    path="/register"
-    element={<Cadastro />} 
-  />
+          <Route 
+            path="/cart"
+            element={
+              token 
+                ? <Cart />
+                : <Login token={token} setToken={setToken} />
+            }
+          />
 
-</Routes>
+          <Route 
+            path="/cadastro"
+            element={<Cadastro />} 
+          />
+
+          <Route 
+            path="/register"
+            element={<Cadastro />} 
+          />
+
+        </Routes>
+
         <Footer />
 
       </div>
@@ -71,7 +81,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
