@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Products from './components/Products';
 import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
+import AdminLogin from './pages/AdminLogin';
 import Cart from "./pages/Cart"; 
 import Cadastro from './pages/Cadastro';
 import { CartProvider } from './context/CartContext';
@@ -15,28 +16,36 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   const [token, setToken] =
     useState(localStorage.getItem("userToken") ?? null);
+  // role may be 'admin' or 'user' (strings) or null
+  const [role, setRole] = useState(localStorage.getItem('userRole') ?? null)
 
   return (
     <CartProvider>
       <div className="App">
 
-        <NavBar token={token} setToken={setToken} />
+        <NavBar token={token} role={role} setToken={setToken} setRole={setRole} />
 
         <Routes>
 
           <Route 
             path="/login" 
-            element={<Login token={token} setToken={setToken} />} 
+            element={<Login token={token} setToken={setToken} setRole={setRole} />} 
           />
 
           {/* Dashboard — rota protegida (somente com login válido) */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute token={token}>
+              <ProtectedRoute token={token} role={role} allowedRoles={[ 'admin' ]} redirectTo={'/admin-login'}>
                 <Dashboard />
               </ProtectedRoute>
             }
+          />
+
+          {/* Admin login — separate from regular user login */}
+          <Route
+            path="/admin-login"
+            element={<AdminLogin token={token} setToken={setToken} setRole={setRole} />}
           />
 
           <Route 
@@ -44,7 +53,7 @@ function App() {
             element={
               token 
                 ? <Products /> 
-                : <Login token={token} setToken={setToken} />
+                : <Login token={token} setToken={setToken} setRole={setRole} />
             } 
           />
 
@@ -53,7 +62,7 @@ function App() {
             element={
               token 
                 ? <ProductDetails /> 
-                : <Login token={token} setToken={setToken} />
+                : <Login token={token} setToken={setToken} setRole={setRole} />
             } 
           />
 
@@ -62,7 +71,7 @@ function App() {
             element={
               token 
                 ? <Cart />
-                : <Login token={token} setToken={setToken} />
+                : <Login token={token} setToken={setToken} setRole={setRole} />
             }
           />
 

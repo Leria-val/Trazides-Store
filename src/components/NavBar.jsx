@@ -3,13 +3,15 @@ import '../App.css'
 import { CartContext } from '../context/CartContext';
 import { useNavigate } from "react-router-dom";
 
-const NavBar = ({ token, setToken }) => {
+const NavBar = ({ token, role, setToken, setRole }) => {
     const navigate = useNavigate();
     const { totalItems } = useContext(CartContext);
 
     const logOutHandler  = () => {
-        setToken("");
-        localStorage.clear();
+        setToken(null);
+        setRole?.(null);
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('userRole');
     };
     return (
         <div className='navbar'>
@@ -23,13 +25,20 @@ const NavBar = ({ token, setToken }) => {
         🛒 {totalItems}
       </div>
 
-            {/* Dashboard link: always visible. If no token, redirect user to /login */}
-            <button
-                className="dashboard-btn"
-                onClick={() => navigate(token ? '/dashboard' : '/login')}
-            >
-                Dashboard
-            </button>
+                        {/* Dashboard — apenas visível para admins */}
+                        {role === 'admin' && (
+                            <button
+                                className="dashboard-btn"
+                                onClick={() => navigate('/dashboard')}
+                            >
+                                Dashboard
+                            </button>
+                        )}
+
+                        {/* Quick access ao admin-login se o usuário não for admin */}
+                        {role !== 'admin' && (
+                            <button className="admin-login-btn" onClick={() => navigate('/admin-login')}>Entrar como admin</button>
+                        )}
 
             {/* Login / Logout */}
             {token ? (
