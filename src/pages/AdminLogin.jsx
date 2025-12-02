@@ -2,14 +2,13 @@ import React, {useState} from 'react'
 import '../App.css'
 import axios from "axios";
 
-const Login = ({ token, setToken, setRole}) => {
+const AdminLogin = ({ token, setToken, setRole }) => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
     const loginHandler = () => {
         setError("")
-        
         
         axios ({
             url:"https://fakestoreapi.com/auth/login",
@@ -22,16 +21,16 @@ const Login = ({ token, setToken, setRole}) => {
         .then(res=> {
             console.log(res.data.token);
             setToken(res.data.token)
-            setRole?.('user')
-            localStorage.setItem('userRole', 'user');
+            setRole('admin')
             localStorage.setItem("userToken", res.data.token);
+            localStorage.setItem('userRole', 'admin');
 
-        setPassword("")
-        setUserName ("")
+            setPassword("")
+            setUserName ("")
         })
         .catch((err) => {
-            console.log(err.response);
-            setError(err.response.data);
+            console.log(err?.response);
+            setError(err?.response?.data || 'Erro ao autenticar');
     });
 
 };
@@ -45,20 +44,20 @@ const Login = ({ token, setToken, setRole}) => {
             <input value={userName} 
             onChange={(e) =>setUserName(e.target.value)} 
             type='text' 
-            placeholder="Username" 
+            placeholder="Admin Username" 
             />
 
             <input value={password} 
             onChange={(e) =>setPassword(e.target.value)} 
             type='password'
-            placeholder='Password'
+            placeholder='Admin Password'
             />
 
 
             {error && <small> {error} </small>}
 
 
-    <button onClick={loginHandler}>Login</button>  
+    <button onClick={loginHandler}>Entrar como Admin</button>  
 
 
         </div> 
@@ -66,4 +65,4 @@ const Login = ({ token, setToken, setRole}) => {
     );
 };
 
-export default Login;
+export default AdminLogin;
