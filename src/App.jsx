@@ -10,14 +10,14 @@ import AdminLogin from './pages/AdminLogin';
 import Cart from "./pages/Cart"; 
 import Cadastro from './pages/Cadastro';
 import { CartProvider } from './context/CartContext';
+import Pagamento from './pages/Pagamento';
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const [token, setToken] =
-    useState(localStorage.getItem("userToken") ?? null);
+  const [token, setToken] = useState(localStorage.getItem("userToken") ?? null);
   // role may be 'admin' or 'user' (strings) or null
-  const [role, setRole] = useState(localStorage.getItem('userRole') ?? null)
+  const [role, setRole] = useState(localStorage.getItem('userRole') ?? null);
 
   return (
     <CartProvider>
@@ -26,6 +26,19 @@ function App() {
         <NavBar token={token} role={role} setToken={setToken} setRole={setRole} />
 
         <Routes>
+          <Route 
+            path="/pagamento" 
+            element={<Pagamento token={token} setToken={setToken} />} 
+          />
+
+          <Route 
+            path="/" 
+            element={
+              token 
+                ? <Products /> 
+                : <Login token={token} setToken={setToken} setRole={setRole} />
+            } 
+          />
 
           <Route 
             path="/login" 
@@ -36,7 +49,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute token={token} role={role} allowedRoles={[ 'admin' ]} redirectTo={'/admin-login'}>
+              <ProtectedRoute token={token} role={role} allowedRoles={['admin']} redirectTo={'/admin-login'}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -46,15 +59,6 @@ function App() {
           <Route
             path="/admin-login"
             element={<AdminLogin token={token} setToken={setToken} setRole={setRole} />}
-          />
-
-          <Route 
-            path="/" 
-            element={
-              token 
-                ? <Products /> 
-                : <Login token={token} setToken={setToken} setRole={setRole} />
-            } 
           />
 
           <Route 
