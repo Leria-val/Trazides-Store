@@ -9,6 +9,7 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from "./pages/Cart"; 
 import Cadastro from './pages/Cadastro'; // <-- ADICIONE ESTA LINHA
 import { CartProvider } from './context/CartContext';
+import Pagamento from './pages/Pagamento';
 
 function App() {
   const [token, setToken] =
@@ -24,6 +25,11 @@ function App() {
   <Route 
     path="/login" 
     element={<Login token={token} setToken={setToken} />} 
+  />
+
+  <Route 
+    path="/pagamento" 
+    element={<Pagamento token={token} setToken={setToken} />} 
   />
 
   <Route 

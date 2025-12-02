@@ -92,6 +92,7 @@ export default function Signup() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
   function handleInput(e) {
     setFields({ ...fields, [e.target.name]: e.target.value });
     setError(""); setFeedback("");
@@ -101,6 +102,7 @@ export default function Signup() {
     e.preventDefault();
     setError(""); setFeedback("");
     setLoading(true);
+    navigate("/pagamento")
 
     if (
       !fields.nome.trim() || !fields.email.trim() ||
@@ -178,7 +180,7 @@ export default function Signup() {
         {error && <Error>{error}</Error>}
         {feedback && <Success>{feedback}</Success>}
 
-        <Btn type="submit" disabled={loading}>
+        <Btn type="submit" disabled={loading} onClick={handleSubmit}>
           {loading ? "Criando conta..." : "Criar Conta"}
         </Btn>
       </FormWrapper>
