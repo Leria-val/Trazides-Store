@@ -1,123 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import api from '../api';
-import ProductCard from '../components/ProductCard';
-import ProductForm from '../components/ProductForm';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from "react";
+import ProductCard from "../components/ProductCard";
+import ProductForm from "../components/ProductForm";
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [columns, setColumns] = useState(1);
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/products');
-      setProducts(res.data);
-    } catch (err) {
-      toast.error('Erro ao buscar produtos');
-    } finally {
-      setLoading(false);
-    }
+  const getProducts = async () => {
+    const res = await fetch("https://fakestoreapi.com/products");
+    const data = await res.json();
+    setProducts(data);
   };
 
   useEffect(() => {
-    fetchProducts();
-    const updateColumns = () => {
-      const w = window.innerWidth;
-      setColumns(w >= 1024 ? 3 : w >= 768 ? 2 : 1);
-    };
-    updateColumns();
-    window.addEventListener('resize', updateColumns);
-    return () => window.removeEventListener('resize', updateColumns);
+    getProducts();
   }, []);
 
-  const handleCreate = async (data) => {
-    try {
-      const res = await api.post('/products', data);
-      setProducts(prev => [res.data, ...prev]);
-      toast.success('Produto criado');
-      setShowForm(false);
-    } catch {
-      toast.error('Erro ao criar produto');
-    }
-  };
-
-  const handleUpdate = async (id, data) => {
-    try {
-      const res = await api.put(`/products/${id}`, data);
-      setProducts(prev => prev.map(p => (p.id === id ? res.data : p)));
-      toast.success('Produto atualizado');
+  const handleSubmit = async (productData) => {
+    if (editing) {
+      await fetch(`https://fakestoreapi.com/products/${editing.id}`, {
+        method: "PUT",
+        body: JSON.stringify(productData),
+      });
       setEditing(null);
-      setShowForm(false);
-    } catch {
-      toast.error('Erro ao atualizar produto');
+      getProducts();
+    } else {
+      await fetch("https://fakestoreapi.com/products", {
+        method: "POST",
+        body: JSON.stringify(productData),
+      });
+      getProducts();
     }
   };
 
   const handleDelete = async (id) => {
-    if (!id) return;
-    if (!window.confirm('Deseja realmente excluir este produto?')) return;
-    try {
-      await api.delete(`/products/${id}`);
-      setProducts(prev => prev.filter(p => p.id !== id));
-      toast.success('Produto excluído');
-    } catch {
-      toast.error('Erro ao excluir produto');
-    }
+    await fetch(`https://fakestoreapi.com/products/${id}`, {
+      method: "DELETE",
+    });
+    getProducts();
   };
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Produtos</h3>
-        <div>
-          <button
-            onClick={() => {
-              setEditing(null);
-              setShowForm(true);
-            }}
-            className="bg-green-600 text-white px-4 py-2 rounded"
-          >
-            Novo produto
-          </button>
-        </div>
+    <div className="p-6">
+      <h1
+        className="text-3xl font-bold mb-6 text-center"
+        style={{ color: "#500106" }}
+      >
+        Dashboard — CRUD Completo 🛍️
+      </h1>
+
+      <ProductForm onSubmit={handleSubmit} editingProduct={editing} />
+
+      <h2
+        className="text-2xl font-semibold mt-10 mb-4"
+        style={{ color: "#500106" }}
+      >
+        Produtos
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {products.map((p) => (
+          <ProductCard
+            key={p.id}
+            product={p}
+            onEdit={(prod) => setEditing(prod)}
+            onDelete={handleDelete}
+          />
+        ))}
       </div>
-
-      {showForm && (
-        <ProductForm
-          initialData={editing ?? undefined}
-          onCancel={() => {
-            setShowForm(false);
-            setEditing(null);
-          }}
-          onCreate={handleCreate}
-          onUpdate={handleUpdate}
-        />
-      )}
-
-      {loading ? (
-        <div>Carregando...</div>
-      ) : products.length === 0 ? (
-        <div>Nenhum produto encontrado.</div>
-      ) : (
-        <div className="masonry" style={{ columnCount: columns, columnGap: '1rem' }}>
-          {products.map(p => (
-            <div key={p.id} className="masonry-item mb-4 break-inside-avoid">
-              <ProductCard
-                product={p}
-                onEdit={() => {
-                  setEditing(p);
-                  setShowForm(true);
-                }}
-                onDelete={() => handleDelete(p.id)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
