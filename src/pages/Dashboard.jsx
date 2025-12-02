@@ -1,286 +1,123 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import Toast from "../components/Toast";
-import * as yup from "yup";
+import React, { useEffect, useState } from 'react';
+import api from '../api';
+import ProductCard from '../components/ProductCard';
+import ProductForm from '../components/ProductForm';
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({
-    title: "",
-    price: "",
-    description: "",
-    image: "",
-    category: "",
-  });
+  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [columns, setColumns] = useState(1);
 
-  const [editingId, setEditingId] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [toasts, setToasts] = useState([]);
-  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
-
-  const schema = yup.object({
-    title: yup.string().required("Título é obrigatório"),
-    price: yup
-      .number()
-      .typeError("Preço deve ser um número")
-      .required("Preço é obrigatório")
-      .positive("Preço deve ser maior que zero"),
-    description: yup
-      .string()
-      .required("Descrição é obrigatória")
-      .min(10, "Descrição muito curta"),
-    image: yup
-      .string()
-      .url("Deve ser uma URL válida")
-      .required("URL da imagem é obrigatória"),
-    category: yup.string().required("Categoria é obrigatória"),
-  });
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get('/products');
+      setProducts(res.data);
+    } catch (err) {
+      toast.error('Erro ao buscar produtos');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
+    fetchProducts();
+    const updateColumns = () => {
+      const w = window.innerWidth;
+      setColumns(w >= 1024 ? 3 : w >= 768 ? 2 : 1);
+    };
+    updateColumns();
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-
+  const handleCreate = async (data) => {
     try {
-      await schema.validate(form, { abortEarly: false });
-    } catch (validationError) {
-      const formErrors = {};
-      validationError.inner.forEach((err) => {
-        if (err.path) formErrors[err.path] = err.message;
-      });
-      setErrors(formErrors);
-      return;
+      const res = await api.post('/products', data);
+      setProducts(prev => [res.data, ...prev]);
+      toast.success('Produto criado');
+      setShowForm(false);
+    } catch {
+      toast.error('Erro ao criar produto');
     }
+  };
 
+  const handleUpdate = async (id, data) => {
     try {
-      if (editingId) {
-        const updated = await axios.put(
-          `https://fakestoreapi.com/products/${editingId}`,
-          form
-        );
-
-        setProducts(
-          products.map((p) => (p.id === editingId ? updated.data : p))
-        );
-        setEditingId(null);
-
-        setToasts((t) => [
-          ...t,
-          { id: Date.now(), type: "success", message: "Produto atualizado" },
-        ]);
-      } else {
-        const created = await axios.post(
-          "https://fakestoreapi.com/products",
-          form
-        );
-
-        setProducts([...products, created.data]);
-
-        setToasts((t) => [
-          ...t,
-          { id: Date.now(), type: "success", message: "Produto criado" },
-        ]);
-      }
-
-      setForm({
-        title: "",
-        price: "",
-        description: "",
-        image: "",
-        category: "",
-      });
-    } catch (err) {
-      setToasts((t) => [
-        ...t,
-        { id: Date.now(), type: "error", message: "Erro ao salvar" },
-      ]);
-      console.log(err);
+      const res = await api.put(`/products/${id}`, data);
+      setProducts(prev => prev.map(p => (p.id === id ? res.data : p)));
+      toast.success('Produto atualizado');
+      setEditing(null);
+      setShowForm(false);
+    } catch {
+      toast.error('Erro ao atualizar produto');
     }
   };
 
   const handleDelete = async (id) => {
+    if (!id) return;
+    if (!window.confirm('Deseja realmente excluir este produto?')) return;
     try {
-      await axios.delete(`https://fakestoreapi.com/products/${id}`);
-
-      setProducts(products.filter((p) => p.id !== id));
-
-      setToasts((t) => [
-        ...t,
-        { id: Date.now(), type: "success", message: "Produto excluído" },
-      ]);
-
-      setDeleteConfirmId(null);
-    } catch (err) {
-      setToasts((t) => [
-        ...t,
-        { id: Date.now(), type: "error", message: "Erro ao excluir" },
-      ]);
-      console.log(err);
+      await api.delete(`/products/${id}`);
+      setProducts(prev => prev.filter(p => p.id !== id));
+      toast.success('Produto excluído');
+    } catch {
+      toast.error('Erro ao excluir produto');
     }
   };
 
-  function removeToast(id) {
-    setToasts((s) => s.filter((t) => t.id !== id));
-  }
-
-  const handleEdit = (p) => {
-    setEditingId(p.id);
-    setForm({
-      title: p.title,
-      price: p.price,
-      description: p.description,
-      image: p.image,
-      category: p.category,
-    });
-  };
-
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-4xl font-bold text-center mb-6 text-blue-600">
-        Dashboard
-      </h1>
-
-      {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white border p-5 rounded-2xl shadow-md grid gap-3"
-      >
-        <input
-          placeholder="Título"
-          className="p-3 rounded-xl border bg-blue-50"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-        />
-        {errors.title && (
-          <small className="text-red-600">{errors.title}</small>
-        )}
-
-        <input
-          placeholder="Preço"
-          className="p-3 rounded-xl border bg-blue-50"
-          value={form.price}
-          onChange={(e) => setForm({ ...form, price: e.target.value })}
-        />
-        {errors.price && (
-          <small className="text-red-600">{errors.price}</small>
-        )}
-
-        <input
-          placeholder="Categoria"
-          className="p-3 rounded-xl border bg-blue-50"
-          value={form.category}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-        />
-        {errors.category && (
-          <small className="text-red-600">{errors.category}</small>
-        )}
-
-        <input
-          placeholder="URL da Imagem"
-          className="p-3 rounded-xl border bg-blue-50"
-          value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-        />
-        {errors.image && (
-          <small className="text-red-600">{errors.image}</small>
-        )}
-
-        <textarea
-          placeholder="Descrição"
-          className="p-3 rounded-xl border bg-blue-50 h-24"
-          value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
-        />
-        {errors.description && (
-          <small className="text-red-600">{errors.description}</small>
-        )}
-
-        <button className="bg-blue-600 text-white py-3 rounded-xl">
-          {editingId ? "Salvar edição" : "Criar produto"}
-        </button>
-      </form>
-
-      {/* Grid */}
-      <div className="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-5">
-        {products.map((p) => (
-          <div
-            key={p.id}
-            className="break-inside-avoid bg-white p-4 rounded-2xl shadow-md border mb-5"
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Produtos</h3>
+        <div>
+          <button
+            onClick={() => {
+              setEditing(null);
+              setShowForm(true);
+            }}
+            className="bg-green-600 text-white px-4 py-2 rounded"
           >
-            <img
-              src={p.image}
-              className="w-full h-52 object-contain rounded-xl mb-3"
-            />
-
-            <h3 className="font-semibold text-lg text-blue-700">
-              {p.title}
-            </h3>
-            <p className="font-bold text-red-500">R$ {p.price}</p>
-
-            <button
-              onClick={() => handleEdit(p)}
-              className="w-full bg-red-300 rounded-xl py-2 mt-3"
-            >
-              Editar
-            </button>
-
-            <button
-              onClick={() => setDeleteConfirmId(p.id)}
-              className="w-full bg-red-500 text-white rounded-xl py-2 mt-2"
-            >
-              Excluir
-            </button>
-          </div>
-        ))}
+            Novo produto
+          </button>
+        </div>
       </div>
 
-      {/* Modal delete */}
-      {deleteConfirmId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white p-6 rounded-xl w-96">
-            <h3 className="text-lg font-semibold mb-3">
-              Confirmar exclusão?
-            </h3>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 border rounded-xl"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => handleDelete(deleteConfirmId)}
-                className="px-4 py-2 bg-red-600 text-white rounded-xl"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        </div>
+      {showForm && (
+        <ProductForm
+          initialData={editing ?? undefined}
+          onCancel={() => {
+            setShowForm(false);
+            setEditing(null);
+          }}
+          onCreate={handleCreate}
+          onUpdate={handleUpdate}
+        />
       )}
 
-      {/* Toasts */}
-      <div className="fixed inset-0 flex items-start justify-end p-6 pointer-events-none">
-        <div className="flex flex-col gap-2 w-full max-w-xs pointer-events-auto">
-          {toasts.map((t) => (
-            <Toast
-              key={t.id}
-              id={t.id}
-              message={t.message}
-              type={t.type}
-              onClose={removeToast}
-            />
+      {loading ? (
+        <div>Carregando...</div>
+      ) : products.length === 0 ? (
+        <div>Nenhum produto encontrado.</div>
+      ) : (
+        <div className="masonry" style={{ columnCount: columns, columnGap: '1rem' }}>
+          {products.map(p => (
+            <div key={p.id} className="masonry-item mb-4 break-inside-avoid">
+              <ProductCard
+                product={p}
+                onEdit={() => {
+                  setEditing(p);
+                  setShowForm(true);
+                }}
+                onDelete={() => handleDelete(p.id)}
+              />
+            </div>
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
