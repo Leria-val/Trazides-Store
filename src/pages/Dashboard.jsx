@@ -50,14 +50,14 @@ export default function Dashboard({ logout }) {
 
     const method = editingProduct ? "PUT" : "POST";
     const endpoint = editingProduct
-      ? "https://fakestoreapi.com/products/${editingProduct.id}"
+      ? `https://fakestoreapi.com/products/${editingProduct.id}`
       : "https://fakestoreapi.com/products";
 
     fetch(endpoint, {
       method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: Bearer `${token}`, // se um dia precisar
+        Authorization: `Bearer ${token}`, // se um dia precisar
       },
       body: JSON.stringify(formData),
 
@@ -90,9 +90,9 @@ export default function Dashboard({ logout }) {
   const handleDelete = (id) => {
     if (!confirm("Tem certeza?")) return;
 
-    fetch(`https://fakestoreapi.com/products/${id}`), {
+    fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "DELETE",
-    }
+    })
       .then(() => {
         alert("Produto excluído!");
         fetchProducts();
