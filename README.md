@@ -77,6 +77,9 @@ git clone https://github.com/Leria-val/Trazides-Store.git
 
 ```bash
 npm install
+npm install yup
+npm install react-icons
+npm install axios
 ```
 
 ### 3. Iniciar el servidor de desarrollo

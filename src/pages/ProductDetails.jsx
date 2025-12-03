@@ -2,11 +2,15 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../context/CartContext";
+import BackButton from "./BackButton"; 
+
+
 
 const ProductDetails = () => {
   const { id } = useParams(); // obtiene el ID de la URL
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate(); // ADICIONE esta linha
 
@@ -23,6 +27,8 @@ const ProductDetails = () => {
   if (!product) return <h2>No product found</h2>;
 
   return (
+    <div className="main-content">
+      
     <div className="details-container">
       <img src={product.image} alt={product.title} className="details-img" />
 
@@ -34,8 +40,10 @@ const ProductDetails = () => {
         <div>
           <button 
             className="add-btn"
-            onClick={() => addToCart(product)}
-          >
+            onClick={() => {
+            addToCart(product); 
+           alert("Producto agregado al carrito ✅"); 
+            }}>          
             Agregar al carrito
           </button>
 
@@ -49,15 +57,18 @@ const ProductDetails = () => {
                 navigate("/signup"); // ou "/cadastro" se esse for seu cadastro
               } else {
                 addToCart(product);
+                alert("Compra simulada 🎉 ¡Pago realizado!"); 
                 navigate("/cart");
-              }
-            }}
-          >
-            Comprar Agora
-          </button>
+              }}}>            
+              Comprar Ahora
+            </button>
+
         </div>
       </div>
+      <BackButton />
     </div>
+    </div>
+    
   );
 };
 

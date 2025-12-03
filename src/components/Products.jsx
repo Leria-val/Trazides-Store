@@ -28,6 +28,7 @@ useEffect(() => {
 
 
     return (
+        <div className="main-content">
         <div className='products-container'>
         {loading && (
             <div>
@@ -66,9 +67,8 @@ useEffect(() => {
 
         ))}
      </div>
+     </div>
    )
 }
 
 export default Products
-
-//12:15 https://www.youtube.com/watch?v=biBvOHB4M6k

@@ -1,13 +1,14 @@
 *{
-box-sizing: border-box;
-padding: 0;
-margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .navbar {
 width: 100%;
 height: 10vh;
-background-color: black;
+background-color: #500106;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -16,14 +17,59 @@ padding: 10px;
 font-weight: bold;
 }
 
-.products-container {
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.main-content {
+  flex: 1; /* ocupa todo el espacio disponible */
+  display: flex;
+  flex-direction: column; /* importante si tienes hijos verticales */
+  min-height: calc(100vh - 80px); /* 80px = altura del footer */
+}
+
+
+.footer {
 width: 100%;
-min-height: 80vh;
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-justify-items: center;
-gap: 20px;
-padding: 20px; 
+height: 10vh;
+background-color: #500106;
+display: flex;
+align-items: center;
+color: white;
+justify-content: center;
+font-size: 19px;
+font-weight: bold;
+}
+
+.details-container {
+  flex: 1; /* crece para ocupar espacio dentro de main-content */
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+  align-items: flex-start; /* si quieres que la info quede arriba */
+}
+
+
+
+/* Products grid */
+.products-container {
+  width: 100%;
+  min-height: 80vh;
+  padding: 30px;
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  justify-items: center;
+  background: #fff;
 }
 
 img {
@@ -37,67 +83,225 @@ img:hover {
 transform: scale(1.1);
 }
 
+  /*daqui pra baixo é Card*/
 .card {
+  width: 100%;
+  max-width: 260px;
+  background: #f8f8f8;
+  border-radius: 16px;
+  padding: 18px;
   display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-margin: 20px 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
+
+/* Animación al pasar el mouse */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
+
+/* Imagen del producto */
+.card img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+.card img:hover {
+  transform: scale(1.1);
+}
+
+/* Descripción textual */
 .card-description {
-display: flex;
-align-items: flex-start;
-flex-direction: column;
-width: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.card-description h5 {
+  font-size: 15px;
+  color: #222;
+  min-height: 45px;
+}
+
+.card-description h6 {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
 }
 
 
-.footer {
-width: 100%;
-height: 10vh;
-background-color: black;
-display: flex;
-align-items: center;
-color: white;
-justify-content: center;
-font-size: 19px;
-font-weight: bold;
+/* Buttons generales */
+button,
+.add-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #8babc5;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s, background 0.2s;
 }
 
-.login {
+button:hover,
+.add-btn:hover {
+   transform: scale(1.05);
+  background: #708e9c;
+}
+
+
+/* Botón Ver Detalles */
+.details-btn {
+  background-color: #500106;
+  color: white;
+  padding: 8px;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.details-btn:hover {
+  background-color: #330104;
+}
+
+
+
+/* Login */
+.login { 
   width: 100%;
   min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background-color: #fff; /* opcional */
+}
+
+.login h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #222;
 }
 
 .login-inputs {
+  width: 100%;
+  max-width: 350px;
+  background: #f8f8f8;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
   display: flex;
-  align-items: center;
   flex-direction: column;
-  text-align: center;
+  align-items: center;
+}
+
+.login-inputs p {
+  font-size: 14px;
+  color: #555;
 }
 
 input{
-  padding: 10px;
-  width: 200px;
-  border: 1px solid #cecece;
-  margin: 20px 0;
+  padding: 12px 10px;
+  width: 100%;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 15px;
+  transition: .3s;
 }
+
+input:focus {
+  border-color: #500106;
+  outline: none;
+}
+
+/* Botones principales del Login */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #500106;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.login-button:hover {
+  background-color: #330104;
+}
+
+/* Botón estilo enlace */
+.link-button {
+  background: none;
+  border: none;
+  color: #8babbc; /* Azul del proyecto */
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: #500106; /* Rojo del proyecto */
+}
+
+/* Texto del usuario de prueba */
+.test-user-text {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.login a {
+  color: #000000;
+  font-size: 14px;
+  margin-top: 12px;
+  text-decoration: none;
+  transition: .3s;
+}
+
+.login a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* Contenedor general del Login */
+.login-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+
 
 small {
   color: red;
 }
 
+
+
+
 button {
   padding: 10px;
-  width: 300px;
+  width: 100%;
   border: 1px solid #cecece;
   margin: 10px 0;
-  background-color: black;
+  background-color: #8babc5;
   color: whitesmoke ;
 }
 
@@ -106,24 +310,81 @@ button {
   padding: 10px;
   width: 100px;
   border: 1px solid #cecece;
-  margin: 50px; /*tirar segundo gpt*/
-  background-color: black;
+  margin: 50px;
+  background-color: #8babc5;
   color: whitesmoke ;
+}
+
+
+
+/* 📦 Contenedor principal del carrito */
+.cart-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 🏬 Títulos */
+.cart-container h2,
+.cart-container h3 {
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* 🧺 Items */
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #f1f1f1;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 18px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+  background: #e8eef0;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+/* 🖼 Imagen del producto */
+.cart-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* 📃 Información */
+.cart-info h4 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  color: #111;
+}
+
+.cart-info p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #333;
 }
 
 .cart-info {
   font-size: 1.1rem;
   font-weight: bold;
   margin-right: 20px;
-  background: #ffffff20; /* leve transparencia */
+  background: #8babc5; /* leve transparencia */
   padding: 6px 12px;
   border-radius: 8px;
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
-  transition: 0.3s ease;
 }
 
 .cart-info:hover {
@@ -131,17 +392,124 @@ button {
 }
 
 
+/* Botoes */
+
 .card-button {
   width: 100%;
   margin-top: 10px;
 }
 
-.details-btn {
-  background-color: #444;
-  color: white;
-  padding: 8px;
-  border-radius: 5px;
+
+.cart-buttons button {
+  border-radius: 12px;
 }
+
+/* Vaciar carrito */
+.clear-btn {
+  background: #500106;
+  color: #fff;
+  width: 100%;
+  margin-top: 10px;
+}
+.pay-btn {
+  background-color: #8babc5;
+  color: #fff;
+  width: 100%;
+  margin-top: 14px;
+}
+
+
+
+/* Hover para botones */
+.cart-buttons button:hover,
+.clear-btn:hover,
+.pay-btn:hover {
+  transform: scale(1.07);
+}
+
+/* +- botones */
+.cart-buttons button {
+  background: #8babbc;
+  color: #fff;
+}
+
+/* Eliminar un producto */
+.cart-buttons button:last-child {
+  background: #500106;
+}
+
+.cart-buttons button:last-child:hover {
+  background: #2f0004;
+}
+
+/* Total */
+.cart-container h3 {
+  text-align: right;
+  font-size: 22px;
+  margin-top: 25px;
+}
+
+
+
+
+
+/* 🔁 Responsivo */
+@media (max-width: 650px) {
+  .cart-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cart-img {
+    width: 120px;
+  }
+
+  .cart-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .cart-container h3 {
+    text-align: center;
+  }
+}
+
+.cart-item {
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+  background: #e8eef0;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #8babc5; /* azul */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.back-button:hover {
+  background-color: #500106; /* rojo */
+  transform: scale(1.05);
+}
+
+.back-button svg {
+  vertical-align: middle;
+}
+
 
 
 
