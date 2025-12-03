@@ -37,14 +37,16 @@ trazides-store/
 │   │   └── CartContext.jsx
 │   ├── pages/
 │   │   ├── Login.jsx
+│   │   ├── BackButton.jsx
 │   │   ├── Cart.jsx
 │   │   ├── ProductDetails.jsx
 │   │   ├── Dashboard.jsx
 │   │   └── Cadastro.jsx
+│   ├── services/
+│   │   └── api.js
 │   ├── App.jsx
-│   ├── main.jsx
 │   ├── App.css
-│   └── index.css
+│   └── main.jsx
 │
 ├── package.json
 ├── vite.config.js
