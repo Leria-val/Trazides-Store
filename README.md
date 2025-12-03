@@ -3,7 +3,7 @@
 ```md
 # 🛍️ Trazides Store
 
-**Trazides Store** es una tienda online desarrollada en **React + Vite**, enfocada en mostrar productos, gestionar un carrito de compras y permitir el login básico de usuarios.  
+**Trazides Store** é uma loja online desenvolvida em **React + Vite**, enfocada en mostrar productos, gestionar un carrito de compras y permitir el login básico de usuarios.  
 Este proyecto forma parte de un entrenamiento práctico en consumo de APIs, manejo de estados globales y creación de interfaces responsivas.
 
 ---
@@ -58,14 +58,13 @@ trazides-store/
 
 ## 🧩 Funcionalidades
 
-✔ Listado de productos  
-✔ Vista de detalle por producto  
-✔ Sistema de **carrito de compras** usando `Context API`  
-✔ Navegación con `React Router`  
+✔ Lista de produtos  
+✔ Vista detalhada do produto  
+✔ Sistema de **carrinho de compras** usando `Context API`  
+✔ Navegação com `React Router`  
 ✔ Login básico  
-✔ Diseño responsivo  
-✔ Estructura lista para conectar con APIs reales  
-
+✔ Design responsivo  
+✔ Lista de estrutura para conectar APIs reais
 ---
 
 ## ▶️ Ejecutar el proyecto localmente
@@ -97,20 +96,8 @@ http://localhost:5173
 ```
 
 ---
-
-## 📦 Scripts disponibles
-
-| Comando           | Descripción                      |
-| ----------------- | -------------------------------- |
-| `npm run dev`     | Inicia el servidor de desarrollo |
-| `npm run build`   | Genera versión lista para deploy |
-| `npm run preview` | Previsualiza el build final      |
-
----
-
 ## 🤝 Contribuciones
 
-Las contribuciones son bienvenidas.
 Para contribuir:
 
 1. Haz un fork del repositorio
@@ -131,7 +118,7 @@ Puedes usarlo, modificarlo y aprender con libertad.
 
 ---
 
-## ✨ Autor
+## ✨ Autor(as)
 
-**Valeria Martinez**
+**Valeria Martinez, Victoria Prazides e Larissa Godoy**
 🔗 GitHub: [Leria-val](https://github.com/Leria-val)
